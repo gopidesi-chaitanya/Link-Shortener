@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>URL Shortener</title>
+<link rel="stylesheet" href="./style.css">
+<style>
+ 
+</style>
+</head>
+<body>
+
+<h1 class="headding">URL Shortener</h1>
+
+<form id="shortenForm">
+ 
+  <input type="text" id="originalUrl" name="originalUrl" placeholder="Enter URL to Shorten:" required> <br>
+  <button type="submit" class="btn">Shorten</button>
+</form>
+
+<div id="shortenedUrl"></div>
+
+<script>
+  const shortenForm = document.getElementById('shortenForm');
+  const shortenedUrlDiv = document.getElementById('shortenedUrl');
+
+  shortenForm.addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const originalUrl = document.getElementById('originalUrl').value;
+
+    const response = await fetch('http://localhost:3000/shorten', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ originalUrl })
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+        console.log(data.shortUrl)
+    shortenedUrlDiv.innerHTML = `<h1 class="ShortenedURL">Shortened URL: <a href="${data.shortUrl}" target="_blank" id="shoturl">${data.shortUrl}</a></h1>`;
+    } else {
+      shortenedUrlDiv.innerHTML = `<p>Error: ${data.error}</p>`;
+    }
+  });
+</script>
+
+</body>
+</html>
